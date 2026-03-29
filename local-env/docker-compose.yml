@@ -1,0 +1,11 @@
+version: '3.1'
+
+services:
+  local_mysql:
+    container_name: my-local-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: hello987
+    build: .
+    ports:
+      - "50000:3306"
