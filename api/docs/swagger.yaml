@@ -1,0 +1,195 @@
+basePath: /
+definitions:
+  health.healthCheck:
+    properties:
+      alive:
+        type: boolean
+      build_date:
+        type: string
+      commit:
+        type: string
+      go_version:
+        type: string
+      since:
+        type: string
+      version:
+        type: string
+    type: object
+  model.Dog:
+    properties:
+      breed:
+        type: string
+      data:
+        items:
+          type: string
+        type: array
+    type: object
+  routes.ErrorResp:
+    properties:
+      errMsg:
+        type: string
+      status:
+        type: string
+    type: object
+host: 127.0.0.1:8081
+info:
+  contact: {}
+  description: Dog API
+  title: Dog API
+  version: "1.0"
+paths:
+  /api/dogs:
+    get:
+      description: Provides dogs information
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: dogs
+          schema:
+            items:
+              $ref: '#/definitions/model.Dog'
+            type: array
+        "500":
+          description: Error description
+          schema:
+            $ref: '#/definitions/routes.ErrorResp'
+      summary: Returns the list of all dogs
+      tags:
+      - Dogs
+    post:
+      consumes:
+      - application/json
+      description: Creates a new dog entry.
+      parameters:
+      - description: Dog payload
+        in: body
+        name: dog
+        required: true
+        schema:
+          $ref: '#/definitions/model.Dog'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: created dog
+          schema:
+            $ref: '#/definitions/model.Dog'
+        "400":
+          description: invalid request body
+          schema:
+            $ref: '#/definitions/routes.ErrorResp'
+        "500":
+          description: could not create dog
+          schema:
+            $ref: '#/definitions/routes.ErrorResp'
+      summary: Create a new dog
+      tags:
+      - Dogs
+  /api/dogs/{dog}:
+    delete:
+      description: Deletes a dog by breed.
+      parameters:
+      - description: Dog breed
+        in: path
+        name: dog
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Dog not found
+          schema:
+            $ref: '#/definitions/routes.ErrorResp'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/routes.ErrorResp'
+      summary: Delete a dog
+      tags:
+      - Dogs
+    get:
+      description: Fetch a dog by name.
+      parameters:
+      - description: Dog breed
+        in: path
+        name: dog
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: dog
+          schema:
+            $ref: '#/definitions/model.Dog'
+        "404":
+          description: 'could not retrieve dog : dog not found'
+          schema:
+            $ref: '#/definitions/routes.ErrorResp'
+        "500":
+          description: Error description
+          schema:
+            $ref: '#/definitions/routes.ErrorResp'
+      summary: Returns a dog
+      tags:
+      - Dogs
+    put:
+      consumes:
+      - application/json
+      description: Updates a dog by breed.
+      parameters:
+      - description: Dog breed
+        in: path
+        name: dog
+        required: true
+        type: string
+      - description: Updated dog payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.Dog'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: updated dog
+          schema:
+            $ref: '#/definitions/model.Dog'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/routes.ErrorResp'
+        "404":
+          description: Dog not found
+          schema:
+            $ref: '#/definitions/routes.ErrorResp'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/routes.ErrorResp'
+      summary: Update an existing dog
+      tags:
+      - Dogs
+  /api/status:
+    get:
+      description: Returns the status of the running application
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Global health of the application
+          schema:
+            $ref: '#/definitions/health.healthCheck'
+        "500":
+          description: Error description formated as {"msg":"string"}
+          schema:
+            type: object
+      summary: Health Check
+      tags:
+      - HealthCheck
+swagger: "2.0"

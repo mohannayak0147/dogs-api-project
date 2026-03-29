@@ -1,0 +1,296 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Dog API",
+        "title": "Dog API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "127.0.0.1:8081",
+    "basePath": "/",
+    "paths": {
+        "/api/dogs": {
+            "get": {
+                "description": "Provides dogs information",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dogs"
+                ],
+                "summary": "Returns the list of all dogs",
+                "responses": {
+                    "200": {
+                        "description": "dogs",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Dog"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error description",
+                        "schema": {
+                            "$ref": "#/definitions/routes.ErrorResp"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new dog entry.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dogs"
+                ],
+                "summary": "Create a new dog",
+                "parameters": [
+                    {
+                        "description": "Dog payload",
+                        "name": "dog",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Dog"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "created dog",
+                        "schema": {
+                            "$ref": "#/definitions/model.Dog"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/routes.ErrorResp"
+                        }
+                    },
+                    "500": {
+                        "description": "could not create dog",
+                        "schema": {
+                            "$ref": "#/definitions/routes.ErrorResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/dogs/{dog}": {
+            "get": {
+                "description": "Fetch a dog by name.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dogs"
+                ],
+                "summary": "Returns a dog",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Dog breed",
+                        "name": "dog",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "dog",
+                        "schema": {
+                            "$ref": "#/definitions/model.Dog"
+                        }
+                    },
+                    "404": {
+                        "description": "could not retrieve dog : dog not found",
+                        "schema": {
+                            "$ref": "#/definitions/routes.ErrorResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Error description",
+                        "schema": {
+                            "$ref": "#/definitions/routes.ErrorResp"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates a dog by breed.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dogs"
+                ],
+                "summary": "Update an existing dog",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Dog breed",
+                        "name": "dog",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated dog payload",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Dog"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "updated dog",
+                        "schema": {
+                            "$ref": "#/definitions/model.Dog"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/routes.ErrorResp"
+                        }
+                    },
+                    "404": {
+                        "description": "Dog not found",
+                        "schema": {
+                            "$ref": "#/definitions/routes.ErrorResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/routes.ErrorResp"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes a dog by breed.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dogs"
+                ],
+                "summary": "Delete a dog",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Dog breed",
+                        "name": "dog",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Dog not found",
+                        "schema": {
+                            "$ref": "#/definitions/routes.ErrorResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/routes.ErrorResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/status": {
+            "get": {
+                "description": "Returns the status of the running application",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "HealthCheck"
+                ],
+                "summary": "Health Check",
+                "responses": {
+                    "200": {
+                        "description": "Global health of the application",
+                        "schema": {
+                            "$ref": "#/definitions/health.healthCheck"
+                        }
+                    },
+                    "500": {
+                        "description": "Error description formated as {\"msg\":\"string\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "health.healthCheck": {
+            "type": "object",
+            "properties": {
+                "alive": {
+                    "type": "boolean"
+                },
+                "build_date": {
+                    "type": "string"
+                },
+                "commit": {
+                    "type": "string"
+                },
+                "go_version": {
+                    "type": "string"
+                },
+                "since": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Dog": {
+            "type": "object",
+            "properties": {
+                "breed": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "routes.ErrorResp": {
+            "type": "object",
+            "properties": {
+                "errMsg": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
